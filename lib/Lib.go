@@ -68,7 +68,7 @@ func CsvOfFile(path string) [][]string {
 
 // The contents of a file, separated on a specified separator string
 func SeparatedFile(path, separator string) []string {
-	str := StringOfFile(path)
+	str := strings.Trim(StringOfFile(path), "\n")
 	return strings.Split(str, separator)
 }
 
@@ -85,12 +85,14 @@ func Sum(numbers []int) int {
 func StringsToInts(ns []string) []int {
 	res := make([]int, len(ns))
 	for i, n := range ns {
-		r, _ := strconv.Atoi(n)
-		res[i] = r
+		r, err := strconv.Atoi(n)
+		if err == nil {
+			res[i] = r
+		}
 	}
 	return res
 }
 
-func filePathOfDay(int day) string {
+func filePathOfDay(day int) string {
 	return fmt.Sprintf("../../input/day%02d.txt", day)
 }
