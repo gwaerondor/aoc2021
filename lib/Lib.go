@@ -1,11 +1,11 @@
 package lib
 
 import (
+	"encoding/csv"
 	"fmt"
 	"os"
 	"strconv"
 	"strings"
-	"encoding/csv"
 )
 
 // Reads a file as a string
@@ -36,6 +36,30 @@ func CsvOfFileOfDay(day int) [][]string {
 func IntOfLinesOfFileOfDay(day int) []int {
 	lines := LinesOfFileOfDay(day)
 	return StringsToInts(lines)
+}
+
+type SIPair struct {
+	String string
+	Int    int
+}
+
+func ParseSIPair(str, separator string) SIPair {
+	parts := strings.Split(str, separator)
+	n, _ := strconv.Atoi(parts[1])
+	return SIPair{parts[0], n}
+}
+
+func SIPairsOfLinesOfFileOfDay(day int, separator string) []SIPair {
+	lines := LinesOfFileOfDay(day)
+	return SIPairsOfLines(lines, separator)
+}
+
+func SIPairsOfLines(lines []string, separator string) []SIPair {
+	res := make([]SIPair, len(lines))
+	for i, ln := range lines {
+		res[i] = ParseSIPair(ln, separator)
+	}
+	return res
 }
 
 // Fields of a CSV file for a specified day, converted to integers
