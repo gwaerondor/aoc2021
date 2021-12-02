@@ -15,14 +15,6 @@ type aimedSub struct {
 	Aim int
 }
 
-type Direction int
-
-const (
-	Forward Direction = iota
-	Down
-	Up
-)
-
 func main() {
 	in := lib.SIPairsOfLinesOfFileOfDay(2, " ")
 	part1 := Day02Part1(in)
