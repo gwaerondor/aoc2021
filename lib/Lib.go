@@ -74,60 +74,6 @@ func ParseDigits(str string) []int {
 	return res
 }
 
-func ParseBits(str string) []bool {
-	res := make([]bool, len(str))
-	digits := ParseDigits(str)
-	for i, e := range digits {
-		if e == 0 {
-			res[i] = false
-		} else if e == 1 {
-			res[i] = true
-		} else {
-			panic(fmt.Errorf("%d is not a valid bit", e))
-		}
-	}
-	return res
-}
-
-func BinaryToInt(bin []bool) int {
-	sum := 0
-	pow := len(bin) - 1
-	for _, bit := range bin {
-		if bit {
-			sum += exp2(pow)
-		}
-		pow--
-	}
-	return sum
-}
-
-func exp2(x int) int {
-	if x == 0 {
-		return 1
-	}
-	prod := 1
-	for x > 0 {
-		prod = prod * 2
-		x--
-	}
-	return prod
-}
-
-func TransposeBits(matrix [][]bool) [][]bool {
-	xl := len(matrix[0])
-	yl := len(matrix)
-	result := make([][]bool, xl)
-	for i := range result {
-		result[i] = make([]bool, yl)
-	}
-	for i := range matrix[0] {
-		for j := range matrix {
-			result[i][j] = matrix[j][i]
-		}
-	}
-	return result
-}
-
 func SIPairsOfLinesOfFileOfDay(day int, separator string) []SIPair {
 	lines := LinesOfFileOfDay(day)
 	return SIPairsOfLines(lines, separator)

@@ -1,6 +1,7 @@
 package main
 
 import (
+	"aoc/bitstring"
 	"aoc/lib"
 	"fmt"
 )
@@ -12,109 +13,64 @@ func main() {
 	fmt.Printf("Part 1: %v\nPart 2: %v\n", p1, p2)
 }
 
-func parse(input []string) [][]bool {
-	parsed := make([][]bool, len(input))
+func parse(input []string) bitstring.Bitmatrix {
+	parsed := make(bitstring.Bitmatrix, len(input))
 	for i, row := range input {
-		parsed[i] = lib.ParseBits(row)
+		parsed[i] = bitstring.New(row)
 	}
 	return parsed
 }
 
-func Day03Part1(in [][]bool) int {
+func Day03Part1(in bitstring.Bitmatrix) int {
 	gamma := Gamma(in)
 	epsilon := Epsilon(in)
 	return gamma * epsilon
 }
 
-func Day03Part2(in [][]bool) int {
+func Day03Part2(in bitstring.Bitmatrix) int {
 	o2 := Oxygen(in)
 	co2 := CO2Scrubber(in)
 	return o2 * co2
 }
 
-func Gamma(in [][]bool) int {
-	transposed := lib.TransposeBits(in)
-	res := make([]bool, 0)
+func Gamma(in bitstring.Bitmatrix) int {
+	transposed := in.Transpose()
+	res := make(bitstring.Bitstring, 0)
 	for _, row := range transposed {
-		res = append(res, mostCommon(row, true))
+		res = append(res, row.MostCommon(bitstring.ToBit(1)))
 	}
-	return lib.BinaryToInt(res)
+	return res.ToInt()
 }
 
-func Epsilon(in [][]bool) int {
-	transposed := lib.TransposeBits(in)
-	res := make([]bool, 0)
+func Epsilon(in bitstring.Bitmatrix) int {
+	transposed := in.Transpose()
+	res := make(bitstring.Bitstring, 0)
 	for _, row := range transposed {
-		res = append(res, leastCommon(row, true))
+		res = append(res, row.LeastCommon(bitstring.ToBit(1)))
 	}
-	return lib.BinaryToInt(res)
+	return res.ToInt()
 }
 
-func Oxygen(in [][]bool) int {
+func Oxygen(in bitstring.Bitmatrix) int {
 	i := 0
 	remainder := in
 	for len(remainder) > 1 {
-		transposed := lib.TransposeBits(remainder)
-		mostCommon := mostCommon(transposed[i], true)
-		remainder = filterOnBit(mostCommon, i, remainder)
+		transposed := remainder.Transpose()
+		mostCommon := transposed[i].MostCommon(bitstring.ToBit(1))
+		remainder = remainder.FilterOnBit(mostCommon, i)
 		i++
 	}
-	return lib.BinaryToInt(remainder[0])
+	return remainder[0].ToInt()
 }
 
-func CO2Scrubber(in [][]bool) int {
+func CO2Scrubber(in bitstring.Bitmatrix) int {
 	i := 0
 	remainder := in
 	for len(remainder) > 1 {
-		transposed := lib.TransposeBits(in)
-		leastCommon := leastCommon(transposed[i], false)
-		remainder = filterOnBit(leastCommon, i, remainder)
+		transposed := in.Transpose()
+		leastCommon := transposed[i].LeastCommon(bitstring.ToBit(0))
+		remainder = remainder.FilterOnBit(leastCommon, i)
 		i++
 	}
-	return lib.BinaryToInt(remainder[0])
-}
-
-func filterOnBit(keep bool, pos int, in [][]bool) [][]bool {
-	res := make([][]bool, 0)
-	for _, bin := range in {
-		if bin[pos] == keep {
-			res = append(res, bin)
-		}
-	}
-	return res
-}
-
-func mostCommon(bits []bool, bias bool) bool {
-	zeros := 0
-	ones := 0
-	for _, bit := range bits {
-		if bit {
-			ones++
-		} else {
-			zeros++
-		}
-	}
-	if zeros == ones {
-		return bias
-	}
-	return ones > zeros
-}
-
-func leastCommon(bits []bool, bias bool) bool {
-	return !mostCommon(bits, !bias)
-}
-
-func pp(b [][]bool) {
-	for _, r := range b {
-		fmt.Printf("[")
-		for _, r2 := range r {
-			if r2 {
-				fmt.Printf("1")
-			} else {
-				fmt.Printf("0")
-			}
-		}
-		fmt.Printf("]")
-	}
-	fmt.Printf("\n")
+	return remainder[0].ToInt()
 }
