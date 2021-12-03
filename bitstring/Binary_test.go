@@ -1,6 +1,9 @@
 package bitstring
 
-import "testing"
+import (
+	"fmt"
+	"testing"
+)
 
 func TestLeastCommon(t *testing.T) {
 	if New("11").LeastCommon(Zero) != Zero {
@@ -179,6 +182,19 @@ func TestFilterOnBit(t *testing.T) {
 	}
 	for _, test := range tests {
 		test.run(t)
+	}
+}
+
+func TestBitString(t *testing.T) {
+	if Zero.String() != "0" || One.String() != "1" {
+		t.Fatal("String() of Bit is wrong")
+	}
+}
+
+func TestBitstringString(t *testing.T) {
+	in := "10101"
+	if New(in).String() != fmt.Sprintf("[%s]", in) {
+		t.Fatalf("Bitstring to string didn't work")
 	}
 }
 

@@ -1,29 +1,27 @@
 package bitstring
 
 import (
-	"aoc/lib"
 	"fmt"
-)
-
-const (
-	Zero Bit = false
-	One  Bit = true
 )
 
 type Bit bool
 type Bitstring []Bit
 type Bitmatrix []Bitstring
 
+const (
+	Zero Bit = false
+	One  Bit = true
+)
+
 func New(init string) Bitstring {
 	res := make(Bitstring, len(init))
-	digits := lib.ParseDigits(init)
-	for i, e := range digits {
-		if e == 0 {
-			res[i] = false
-		} else if e == 1 {
-			res[i] = true
+	for i, e := range []rune(init) {
+		if e == '0' {
+			res[i] = Zero
+		} else if e == '1' {
+			res[i] = One
 		} else {
-			panic(fmt.Errorf("%d is not a valid bit", e))
+			panic(fmt.Errorf("%s is not a valid bit", string(e)))
 		}
 	}
 	return res
