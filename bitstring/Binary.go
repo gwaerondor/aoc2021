@@ -163,7 +163,7 @@ func (b Bitmatrix) FilterOnBit(keep Bit, pos int) Bitmatrix {
 	res := make(Bitmatrix, 0)
 	for _, bin := range b {
 		if bin[pos] == keep {
-			res = append(res, bin)
+			res = res.AddRow(bin)
 		}
 	}
 	return res
