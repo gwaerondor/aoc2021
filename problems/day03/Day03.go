@@ -7,7 +7,7 @@ import (
 )
 
 func main() {
-	in := parse(lib.LinesOfFileOfDay(3))
+	in := lib.BitmatrixOfFileOfDay(3)
 	p1 := Day03Part1(in)
 	p2 := Day03Part2(in)
 	fmt.Printf("Part 1: %v\nPart 2: %v\n", p1, p2)

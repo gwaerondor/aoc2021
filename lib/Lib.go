@@ -1,6 +1,7 @@
 package lib
 
 import (
+	"aoc/bitstring"
 	"encoding/csv"
 	"fmt"
 	"os"
@@ -36,6 +37,11 @@ func CsvOfFileOfDay(day int) [][]string {
 func IntOfLinesOfFileOfDay(day int) []int {
 	lines := LinesOfFileOfDay(day)
 	return StringsToInts(lines)
+}
+
+func BitmatrixOfFileOfDay(day int) bitstring.Bitmatrix {
+	lines := LinesOfFileOfDay(day)
+	return bitstring.NewMatrix(lines)
 }
 
 // Lines of a file for a specific day, each character converted to a digit

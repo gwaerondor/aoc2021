@@ -27,6 +27,14 @@ func New(init string) Bitstring {
 	return res
 }
 
+func NewMatrix(init []string) Bitmatrix {
+	res := make(Bitmatrix, len(init))
+	for i, ln := range init {
+		res[i] = New(ln)
+	}
+	return res
+}
+
 func (b Bitstring) ToInt() int {
 	sum := 0
 	pow := len(b) - 1
