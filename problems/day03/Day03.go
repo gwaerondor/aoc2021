@@ -3,118 +3,118 @@ package main
 import (
 	"aoc/lib"
 	"fmt"
-	"strconv"
 )
 
 func main() {
-	in := lib.LinesOfFileOfDay(3)
+	in := parse(lib.LinesOfFileOfDay(3))
 	p1 := Day03Part1(in)
 	p2 := Day03Part2(in)
 	fmt.Printf("Part 1: %v\nPart 2: %v\n", p1, p2)
 }
 
-func Day03Part1(in []string) int64 {
-	gamma, _ := strconv.ParseInt(Gamma(in), 2, 32)
-	epsilon, _ := strconv.ParseInt(Epsilon(in), 2, 32)
+func parse(input []string) [][]bool {
+	parsed := make([][]bool, len(input))
+	for i, row := range input {
+		parsed[i] = lib.ParseBits(row)
+	}
+	return parsed
+}
+
+func Day03Part1(in [][]bool) int {
+	gamma := Gamma(in)
+	epsilon := Epsilon(in)
 	return gamma * epsilon
 }
 
-func Day03Part2(in []string) int64 {
-	o2, _ := strconv.ParseInt(Oxygen(in), 2, 32)
-	co2, _ := strconv.ParseInt(CO2Scrubber(in), 2, 32)
+func Day03Part2(in [][]bool) int {
+	o2 := Oxygen(in)
+	co2 := CO2Scrubber(in)
 	return o2 * co2
 }
 
-func Gamma(in []string) string {
-	gamma := make([]rune, len(in[0]))
-	for i, _ := range in[0] {
-		thisPos := allFromPos(i, in)
-		gamma[i] = mostCommon(thisPos, '0')
+func Gamma(in [][]bool) int {
+	transposed := lib.TransposeBits(in)
+	res := make([]bool, 0)
+	for _, row := range transposed {
+		res = append(res, mostCommon(row, true))
 	}
-	return string(gamma)
+	return lib.BinaryToInt(res)
 }
 
-func Epsilon(in []string) string {
-	gamma := Gamma(in)
-	epsilon := make([]rune, len(gamma))
-	for i, e := range gamma {
-		switch e {
-		case '1':
-			epsilon[i] = '0'
-		default:
-			epsilon[i] = '1'
-		}
+func Epsilon(in [][]bool) int {
+	transposed := lib.TransposeBits(in)
+	res := make([]bool, 0)
+	for _, row := range transposed {
+		res = append(res, leastCommon(row, true))
 	}
-	return string(epsilon)
+	return lib.BinaryToInt(res)
 }
 
-func Oxygen(in []string) string {
+func Oxygen(in [][]bool) int {
 	i := 0
 	remainder := in
 	for len(remainder) > 1 {
-		mostCommon := mostCommon(allFromPos(i, remainder), '1')
-		remainder = filterOnRune(mostCommon, i, remainder)
+		transposed := lib.TransposeBits(remainder)
+		mostCommon := mostCommon(transposed[i], true)
+		remainder = filterOnBit(mostCommon, i, remainder)
 		i++
 	}
-	return remainder[0]
+	return lib.BinaryToInt(remainder[0])
 }
 
-func CO2Scrubber(in []string) string {
+func CO2Scrubber(in [][]bool) int {
 	i := 0
 	remainder := in
 	for len(remainder) > 1 {
-		leastCommon := leastCommon(allFromPos(i, remainder), '0')
-		remainder = filterOnRune(leastCommon, i, remainder)
+		transposed := lib.TransposeBits(in)
+		leastCommon := leastCommon(transposed[i], false)
+		remainder = filterOnBit(leastCommon, i, remainder)
 		i++
 	}
-	return remainder[0]
+	return lib.BinaryToInt(remainder[0])
 }
 
-func filterOnRune(keep rune, pos int, in []string) []string {
-	res := make([]string, 0)
-	for _, s := range in {
-		if rune(s[pos]) == keep {
-			res = append(res, s)
+func filterOnBit(keep bool, pos int, in [][]bool) [][]bool {
+	res := make([][]bool, 0)
+	for _, bin := range in {
+		if bin[pos] == keep {
+			res = append(res, bin)
 		}
 	}
 	return res
 }
 
-func allFromPos(pos int, strs []string) []rune {
-	res := make([]rune, len(strs))
-	for i, str := range strs {
-		res[i] = rune(str[pos])
-	}
-	return res
-}
-
-func mostCommon(runes []rune, bias rune) rune {
+func mostCommon(bits []bool, bias bool) bool {
 	zeros := 0
 	ones := 0
-	for _, r := range runes {
-		switch r {
-		case '0':
-			zeros++
-		case '1':
+	for _, bit := range bits {
+		if bit {
 			ones++
+		} else {
+			zeros++
 		}
 	}
 	if zeros == ones {
 		return bias
 	}
-	if zeros > ones {
-		return '0'
-	}
-	return '1'
+	return ones > zeros
 }
 
-func leastCommon(runes []rune, bias rune) rune {
-	nonBias := '0'
-	if bias == '0' {
-		nonBias = '1'
+func leastCommon(bits []bool, bias bool) bool {
+	return !mostCommon(bits, !bias)
+}
+
+func pp(b [][]bool) {
+	for _, r := range b {
+		fmt.Printf("[")
+		for _, r2 := range r {
+			if r2 {
+				fmt.Printf("1")
+			} else {
+				fmt.Printf("0")
+			}
+		}
+		fmt.Printf("]")
 	}
-	if mostCommon(runes, nonBias) == '0' {
-		return '1'
-	}
-	return '0'
+	fmt.Printf("\n")
 }

@@ -38,6 +38,16 @@ func IntOfLinesOfFileOfDay(day int) []int {
 	return StringsToInts(lines)
 }
 
+// Lines of a file for a specific day, each character converted to a digit
+func DigitsOfLinesOfFileOfDay(day int) [][]int {
+	lines := LinesOfFileOfDay(day)
+	res := make([][]int, len(lines))
+	for i, ln := range lines {
+		res[i] = ParseDigits(ln)
+	}
+	return res
+}
+
 type SIPair struct {
 	String string
 	Int    int
@@ -45,8 +55,77 @@ type SIPair struct {
 
 func ParseSIPair(str, separator string) SIPair {
 	parts := strings.Split(str, separator)
-	n, _ := strconv.Atoi(parts[1])
+	n, err := strconv.Atoi(parts[1])
+	if err != nil {
+		panic(err)
+	}
 	return SIPair{parts[0], n}
+}
+
+func ParseDigits(str string) []int {
+	res := make([]int, len(str))
+	for i, e := range str {
+		digit, err := strconv.Atoi(string(e))
+		if err != nil {
+			panic(err)
+		}
+		res[i] = digit
+	}
+	return res
+}
+
+func ParseBits(str string) []bool {
+	res := make([]bool, len(str))
+	digits := ParseDigits(str)
+	for i, e := range digits {
+		if e == 0 {
+			res[i] = false
+		} else if e == 1 {
+			res[i] = true
+		} else {
+			panic(fmt.Errorf("%d is not a valid bit", e))
+		}
+	}
+	return res
+}
+
+func BinaryToInt(bin []bool) int {
+	sum := 0
+	pow := len(bin) - 1
+	for _, bit := range bin {
+		if bit {
+			sum += exp2(pow)
+		}
+		pow--
+	}
+	return sum
+}
+
+func exp2(x int) int {
+	if x == 0 {
+		return 1
+	}
+	prod := 1
+	for x > 0 {
+		prod = prod * 2
+		x--
+	}
+	return prod
+}
+
+func TransposeBits(matrix [][]bool) [][]bool {
+	xl := len(matrix[0])
+	yl := len(matrix)
+	result := make([][]bool, xl)
+	for i := range result {
+		result[i] = make([]bool, yl)
+	}
+	for i := range matrix[0] {
+		for j := range matrix {
+			result[i][j] = matrix[j][i]
+		}
+	}
+	return result
 }
 
 func SIPairsOfLinesOfFileOfDay(day int, separator string) []SIPair {
@@ -110,9 +189,10 @@ func StringsToInts(ns []string) []int {
 	res := make([]int, len(ns))
 	for i, n := range ns {
 		r, err := strconv.Atoi(n)
-		if err == nil {
-			res[i] = r
+		if err != nil {
+			panic(err)
 		}
+		res[i] = r
 	}
 	return res
 }
