@@ -13,14 +13,6 @@ func main() {
 	fmt.Printf("Part 1: %v\nPart 2: %v\n", p1, p2)
 }
 
-func parse(input []string) bitstring.Bitmatrix {
-	parsed := make(bitstring.Bitmatrix, len(input))
-	for i, row := range input {
-		parsed[i] = bitstring.New(row)
-	}
-	return parsed
-}
-
 func Day03Part1(in bitstring.Bitmatrix) int {
 	gamma := Gamma(in)
 	epsilon := Epsilon(in)

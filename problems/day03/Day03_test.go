@@ -21,7 +21,7 @@ var testData []string = []string{
 	"01010",
 }
 
-var parsed bitstring.Bitmatrix = parse(testData)
+var parsed bitstring.Bitmatrix = bitstring.NewMatrix(testData)
 
 func TestDay03Part1(t *testing.T) {
 	exp := 198
@@ -66,10 +66,9 @@ func TestCO2Scrubber(t *testing.T) {
 }
 
 func TestActualSolution(t *testing.T) {
-	in := parse(lib.LinesOfFileOfDay(3))
+	in := lib.BitmatrixOfFileOfDay(3)
 	t.Run("Part 1", func(t *testing.T) {
 		exp := 1458194
-		in := parse(lib.LinesOfFileOfDay(3))
 		if res := Day03Part1(in); res != exp {
 			t.Fatalf("Expected %d, got %d", exp, res)
 		}
