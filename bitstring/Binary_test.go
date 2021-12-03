@@ -198,6 +198,21 @@ func TestBitstringString(t *testing.T) {
 	}
 }
 
+func TestBitFlip(t *testing.T) {
+	if Zero.Flip() != One || One.Flip() != Zero {
+		t.Fatal("Bit.Flip() isn't working")
+	}
+}
+
+func TestBitstringFlip(t *testing.T) {
+	in := New("11001010")
+	expected := New("00110101")
+	actual := in.Flip()
+	if !expected.Equals(actual) {
+		t.Fatal("Bitstring.Flip() is not working")
+	}
+}
+
 func toBinMatrix(bins []string) Bitmatrix {
 	res := make(Bitmatrix, 0)
 	for _, s := range bins {

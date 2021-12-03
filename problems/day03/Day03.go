@@ -34,43 +34,38 @@ func Day03Part2(in bitstring.Bitmatrix) int {
 }
 
 func Gamma(in bitstring.Bitmatrix) int {
-	transposed := in.Transpose()
-	res := make(bitstring.Bitstring, 0)
-	for _, row := range transposed {
-		res = append(res, row.MostCommon(bitstring.ToBit(1)))
-	}
-	return res.ToInt()
+	gamma := getMostCommonByColumn(in)
+	return gamma.ToInt()
 }
 
 func Epsilon(in bitstring.Bitmatrix) int {
-	transposed := in.Transpose()
-	res := make(bitstring.Bitstring, 0)
-	for _, row := range transposed {
-		res = append(res, row.LeastCommon(bitstring.ToBit(1)))
+	epsilon := getMostCommonByColumn(in).Flip()
+	return epsilon.ToInt()
+}
+
+func getMostCommonByColumn(m bitstring.Bitmatrix) bitstring.Bitstring {
+	transposed := m.Transpose()
+	res := make(bitstring.Bitstring, len(transposed))
+	for i, row := range transposed {
+		res[i] = row.MostCommon(bitstring.ToBit(1))
 	}
-	return res.ToInt()
+	return res
 }
 
 func Oxygen(in bitstring.Bitmatrix) int {
-	i := 0
-	remainder := in
-	for len(remainder) > 1 {
-		transposed := remainder.Transpose()
+	for i := 0; len(in) > 1; i++ {
+		transposed := in.Transpose()
 		mostCommon := transposed[i].MostCommon(bitstring.ToBit(1))
-		remainder = remainder.FilterOnBit(mostCommon, i)
-		i++
+		in = in.FilterOnBit(mostCommon, i)
 	}
-	return remainder[0].ToInt()
+	return in[0].ToInt()
 }
 
 func CO2Scrubber(in bitstring.Bitmatrix) int {
-	i := 0
-	remainder := in
-	for len(remainder) > 1 {
+	for i := 0; len(in) > 1; i++ {
 		transposed := in.Transpose()
 		leastCommon := transposed[i].LeastCommon(bitstring.ToBit(0))
-		remainder = remainder.FilterOnBit(leastCommon, i)
-		i++
+		in = in.FilterOnBit(leastCommon, i)
 	}
-	return remainder[0].ToInt()
+	return in[0].ToInt()
 }

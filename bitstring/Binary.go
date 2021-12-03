@@ -39,6 +39,18 @@ func (b Bitstring) ToInt() int {
 	return sum
 }
 
+func (b Bit) Flip() Bit {
+	return !b
+}
+
+func (b Bitstring) Flip() Bitstring {
+	res := make(Bitstring, len(b))
+	for i, e := range b {
+		res[i] = e.Flip()
+	}
+	return res
+}
+
 func (b Bitstring) MostCommon(bias Bit) Bit {
 	zeros := 0
 	ones := 0
