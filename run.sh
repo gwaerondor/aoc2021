@@ -3,15 +3,17 @@
 ACTION="both"
 DAY="1"
 
-GO="/usr/local/go/bin/go"
+GO=go
+[ -f "/usr/local/go/bin/go" ] && GO="/usr/local/go/bin/go"
 
 main() {
-    [ ! -z "${1}" ] && DAY="$(echo "${1}" | sed 's/^\([0-9]\)$/0\1/')"
-    [ ! -z "${2}" ] && ACTION="${2}"
-    if [ "${ACTION}" = "test" ] && [ "${DAY}" = "all" ]; then
+    if [ "${*}" = "test all" ]; then
         ${GO} test ./...
         exit ${?}
     fi
+    [ ! -z "${1}" ] && DAY="$(echo "${1}" | sed 's/^\([0-9]\)$/0\1/')"
+    [ ! -z "${2}" ] && ACTION="${2}"
+
     local PROBLEM_PATH
     PROBLEM_PATH="problems/day${DAY}/"
     local CMD
