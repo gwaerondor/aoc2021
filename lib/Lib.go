@@ -5,6 +5,7 @@ import (
 	"encoding/csv"
 	"fmt"
 	"os"
+	"regexp"
 	"strconv"
 	"strings"
 )
@@ -26,6 +27,10 @@ func StringOfFileOfDay(day int) string {
 // Lines of a file for a specified day
 func LinesOfFileOfDay(day int) []string {
 	return LinesOfFile(filePathOfDay(day))
+}
+
+func SeparatedFileOfDay(day int, separator string) []string {
+	return SeparatedFile(filePathOfDay(day), separator)
 }
 
 // Fields of a CSV file for a specified day
@@ -134,6 +139,21 @@ func Sum(numbers []int) int {
 		sum += n
 	}
 	return sum
+}
+
+func StringsToIntMatrix(matrix []string, separator string) [][]int {
+	res := make([][]int, len(matrix))
+	for i, ln := range matrix {
+		res[i] = StringToInts(ln, separator)
+	}
+	return res
+}
+
+func StringToInts(ns, separator string) []int {
+	ns = regexp.MustCompile("\\s+").ReplaceAllLiteralString(ns, " ")
+	ns = strings.Trim(ns, " \n\t")
+	split := strings.Split(ns, separator)
+	return StringsToInts(split)
 }
 
 // Converts a list of numeric strings to a list of integers
