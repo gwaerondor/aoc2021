@@ -66,3 +66,24 @@ func TestParseDiagonalLine(t *testing.T) {
 		t.Fatalf("Lines were not equal: %v and %v", expected, actual)
 	}
 }
+
+func linesEqual(a, b []coord) bool {
+	if len(a) != len(b) {
+		return false
+	}
+	for i := range a {
+		if !in(a[i], b) {
+			return false
+		}
+	}
+	return true
+}
+
+func in(wanted coord, coords []coord) bool {
+	for _, coord := range coords {
+		if coord == wanted {
+			return true
+		}
+	}
+	return false
+}

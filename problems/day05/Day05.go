@@ -15,42 +15,42 @@ func main() {
 }
 
 func Day05Part1(in []string) int {
-	occurrences := make(map[coord]int)
-	for _, ln := range in {
-		line := parseLineFromString(ln)
-		for _, coord := range line {
-			occurrences[coord]++
-		}
-	}
-	atLeastTwo := 0
-	for _, v := range occurrences {
-		if v >= 2 {
-			atLeastTwo++
-		}
-	}
-	return atLeastTwo
+	lines := inputToLines(in, parseLineFromString)
+	return countIntersectingLines(lines)
 }
 
 func Day05Part2(in []string) int {
-	occurrences := make(map[coord]int)
-	for _, ln := range in {
-		line := parseLineFromStringWithDiagonals(ln)
-		for _, coord := range line {
-			occurrences[coord]++
-		}
-	}
-	atLeastTwo := 0
-	for _, v := range occurrences {
-		if v >= 2 {
-			atLeastTwo++
-		}
-	}
-	return atLeastTwo
+	lines := inputToLines(in, parseLineFromStringWithDiagonals)
+	return countIntersectingLines(lines)
 }
 
 type coord struct {
 	x int
 	y int
+}
+
+func inputToLines(in []string, parser func(string) []coord) [][]coord {
+	lines := make([][]coord, len(in))
+	for i, line := range in {
+		lines[i] = parser(line)
+	}
+	return lines
+}
+
+func countIntersectingLines(lines [][]coord) int {
+	occurrences := make(map[coord]int)
+	for _, ln := range lines {
+		for _, coord := range ln {
+			occurrences[coord]++
+		}
+	}
+	intersections := 0
+	for _, v := range occurrences {
+		if v >= 2 {
+			intersections++
+		}
+	}
+	return intersections
 }
 
 func parseLineFromString(s string) []coord {
@@ -120,32 +120,4 @@ func parseLineWithDiag(from, to coord) []coord {
 		res[i] = coord{xs[i], ys[i]}
 	}
 	return res
-}
-
-func towards(from, to int ) int {
-	if from > to {
-		return from - 1
-	}
-	return from + 1
-}
-
-func linesEqual(a, b []coord) bool {
-	if len(a) != len(b) {
-		return false
-	}
-	for i := range a {
-		if !in(a[i], b) {
-			return false
-		}
-	}
-	return true
-}
-
-func in(wanted coord, coords []coord) bool {
-	for _, coord := range coords {
-		if coord == wanted {
-			return true
-		}
-	}
-	return false
 }
