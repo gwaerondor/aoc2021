@@ -172,3 +172,18 @@ func StringsToInts(ns []string) []int {
 func filePathOfDay(day int) string {
 	return fmt.Sprintf("../../input/day%02d.txt", day)
 }
+
+// Sequence of integers from from (inclusive) to to (inclusive)
+func Seq(from, to int) []int {
+	res := make([]int, 0)
+	if from > to {
+		for i := from; i >= to; i-- {
+			res = append(res, i)
+		}
+	} else {
+		for i := from; i <= to; i++ {
+			res = append(res, i)
+		}
+	}
+	return res
+}

@@ -25,7 +25,7 @@ func TestDay05Part1(t *testing.T) {
 }
 
 func TestDay05Part2(t *testing.T) {
-	exp := 20
+	exp := 12
 	if res := Day05Part2(testData); res != exp {
 		t.Fatalf("Expected %d, got %d", exp, res)
 	}
@@ -50,6 +50,18 @@ func TestParseVerticalLine(t *testing.T) {
 		{2, 3}, {3, 3}, {4, 3},
 	}
 	actual := parseLine(from, to)
+	if !linesEqual(expected, actual) {
+		t.Fatalf("Lines were not equal: %v and %v", expected, actual)
+	}
+}
+
+func TestParseDiagonalLine(t *testing.T) {
+	from := coord{0, 0}
+	to := coord{2, 2}
+	expected := []coord{
+		{0, 0}, {1, 1}, {2, 2},
+	}
+	actual := parseLineWithDiag(from, to)
 	if !linesEqual(expected, actual) {
 		t.Fatalf("Lines were not equal: %v and %v", expected, actual)
 	}

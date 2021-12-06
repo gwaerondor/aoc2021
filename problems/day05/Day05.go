@@ -32,7 +32,20 @@ func Day05Part1(in []string) int {
 }
 
 func Day05Part2(in []string) int {
-	return len(in) * 2
+	occurrences := make(map[coord]int)
+	for _, ln := range in {
+		line := parseLineFromStringWithDiagonals(ln)
+		for _, coord := range line {
+			occurrences[coord]++
+		}
+	}
+	atLeastTwo := 0
+	for _, v := range occurrences {
+		if v >= 2 {
+			atLeastTwo++
+		}
+	}
+	return atLeastTwo
 }
 
 type coord struct {
@@ -51,34 +64,60 @@ func parseLineFromString(s string) []coord {
 	return parseLine(coord{fx, fy}, coord{tx, ty})
 }
 
-// func parseLineFromStringWithDiagonals(s string) []coord {
-// 	parts := strings.Split(s, " -> ")
-// 	fromParts := strings.Split(parts[0], ",")
-// 	toParts := strings.Split(parts[1], ",")
-// 	fx, _ := strconv.Atoi(fromParts[0])
-// 	fy, _ := strconv.Atoi(fromParts[1])
-// 	tx, _ := strconv.Atoi(toParts[0])
-// 	ty, _ := strconv.Atoi(toParts[1])
-// }
+func parseLineFromStringWithDiagonals(s string) []coord {
+	parts := strings.Split(s, " -> ")
+	fromParts := strings.Split(parts[0], ",")
+	toParts := strings.Split(parts[1], ",")
+	fx, _ := strconv.Atoi(fromParts[0])
+	fy, _ := strconv.Atoi(fromParts[1])
+	tx, _ := strconv.Atoi(toParts[0])
+	ty, _ := strconv.Atoi(toParts[1])
+	return parseLineWithDiag(coord{fx, fy}, coord{tx, ty})
+}
 
 func parseLine(from, to coord) []coord {
-	res := make([]coord, 0)
-	if from.x == to.x || from.y == to.y {
-		if from.x > to.x {
-			tmp := to.x
-			to.x = from.x
-			from.x = tmp
+	if from.x == to.x {
+		ys := lib.Seq(from.y, to.y)
+		res := make([]coord, len(ys))
+		for i := 0; i < len(ys); i++ {
+			res[i] = coord{from.x, ys[i]}
 		}
-		if from.y > to.y {
-			tmp := to.y
-			to.y = from.y
-			from.y = tmp
+		return res
+	}
+
+	if from.y == to.y {
+		xs := lib.Seq(from.x, to.x)
+		res := make([]coord, len(xs))
+		for i := 0; i < len(xs); i++ {
+			res[i] = coord{xs[i], from.y}
 		}
-		for x := from.x; x <= to.x; x = towards(x, to.x) {
-			for y := from.y; y <= to.y; y = towards(y, to.y) {
-				res = append(res, coord{x, y})
-			}
+		return res
+	}
+	return []coord{}
+}
+
+func parseLineWithDiag(from, to coord) []coord {
+	if from.x == to.x {
+		ys := lib.Seq(from.y, to.y)
+		res := make([]coord, len(ys))
+		for i := 0; i < len(ys); i++ {
+			res[i] = coord{from.x, ys[i]}
 		}
+		return res
+	}
+	if from.y == to.y {
+		xs := lib.Seq(from.x, to.x)
+		res := make([]coord, len(xs))
+		for i := 0; i < len(xs); i++ {
+			res[i] = coord{xs[i], from.y}
+		}
+		return res
+	}
+	xs := lib.Seq(from.x, to.x)
+	ys := lib.Seq(from.y, to.y)
+	res := make([]coord, len(xs))
+	for i:= 0; i < len(xs); i++ {
+		res[i] = coord{xs[i], ys[i]}
 	}
 	return res
 }
