@@ -1,8 +1,8 @@
 -module(day06).
--export([main/0]).
+-export([main/1]).
 
-main() ->
-    Init = parse("../input/day06.txt"),
+main(Input) ->
+    Init = parse(Input),
     io:format("Part 1: ~p~nPart 2: ~p~n", [run(Init, 80), run(Init, 256)]).
 
 run(Fish, 0) -> lists:sum(maps:values(Fish));
@@ -17,11 +17,8 @@ tick(Fish) ->
 shift_down(Ix, Map) ->
     Map#{Ix - 1 => maps:get(Ix, Map, 0)}.
 
-parse(File) ->
-    {ok, BinData} = file:read_file(File),
-    Str = binary_to_list(BinData),
-    Trimmed = string:trim(Str),
-    freq([list_to_integer(Token) || Token <- string:tokens(Trimmed, ",")]).
+parse(Input) ->
+    freq([list_to_integer(Token) || Token <- string:tokens(Input, ",")]).
 
 freq(Fish) ->
     lists:foldl(fun increment_at/2, #{}, Fish).
