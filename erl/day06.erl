@@ -2,7 +2,7 @@
 -export([main/0]).
 
 main() ->
-    Init = parse("input/day06.txt"),
+    Init = parse("../input/day06.txt"),
     io:format("Part 1: ~p~nPart 2: ~p~n", [run(Init, 80), run(Init, 256)]).
 
 run(Fish, 0) -> lists:sum(maps:values(Fish));
