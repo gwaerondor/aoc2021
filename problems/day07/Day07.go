@@ -13,19 +13,23 @@ func main() {
 }
 
 func Day07Part1(crabs []int) int {
+	return run(crabs, id)
+}
+
+func Day07Part2(crabs []int) int {
+	return run(crabs, cumulativeSum)
+}
+
+func run(crabs []int, counter func(int) int) int {
 	farLeft := min(crabs)
 	farRight := max(crabs)
 	fuelSpent := make(map[int]int)
 	for i := farLeft; i <= farRight; i++ {
 		for _, crab := range crabs {
-			fuelSpent[i] += abs(crab - i)
+			fuelSpent[i] += counter(abs(crab - i))
 		}
 	}
 	return smallestValue(fuelSpent)
-}
-
-func Day07Part2(in []int) int {
-	return -1
 }
 
 func min(ns []int) int {
@@ -63,4 +67,17 @@ func smallestValue(m map[int]int) int {
 		}
 	}
 	return smallest
+}
+
+func cumulativeSum(n int) int {
+	sum := 0
+	for n > 0 {
+		sum += n
+		n--
+	}
+	return sum
+}
+
+func id(n int) int {
+	return n
 }
