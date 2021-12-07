@@ -13,11 +13,11 @@ func main() {
 }
 
 func Day07Part1(crabs []int) int {
-	return run(crabs, id)
+	return run(crabs, func(n int) int { return n })
 }
 
 func Day07Part2(crabs []int) int {
-	return run(crabs, cumulativeSum)
+	return run(crabs, func(n int) int { return n * (n + 1) / 2 })
 }
 
 func run(crabs []int, counter func(int) int) int {
@@ -67,17 +67,4 @@ func smallestValue(m map[int]int) int {
 		}
 	}
 	return smallest
-}
-
-func cumulativeSum(n int) int {
-	sum := 0
-	for n > 0 {
-		sum += n
-		n--
-	}
-	return sum
-}
-
-func id(n int) int {
-	return n
 }
