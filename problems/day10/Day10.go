@@ -56,8 +56,7 @@ func canClose(r rune, s string) bool {
 	if s == "" {
 		return false
 	}
-	last := []rune(s)[len(s)-1:len(s)][0]
-	mate, _ := closers[last]
+	mate, _ := closers[last(s)]
 	return r == mate
 }
 
@@ -114,6 +113,10 @@ func middle(scores []int) int {
 }
 
 func findNextCloser(s string) rune {
-	return closers[[]rune(s[len(s)-1:len(s)])[0]]
+	closer, _ := closers[last(s)]
+	return closer
+}
 
+func last(s string) rune {
+	return []rune(s[len(s)-1:len(s)])[0]
 }
