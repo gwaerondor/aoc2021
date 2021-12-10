@@ -52,6 +52,10 @@ func BitmatrixOfFileOfDay(day int) bitstring.Bitmatrix {
 // Lines of a file for a specific day, each character converted to a digit
 func DigitsOfLinesOfFileOfDay(day int) [][]int {
 	lines := LinesOfFileOfDay(day)
+	return DigitsOfLines(lines)
+}
+
+func DigitsOfLines(lines []string) [][]int {
 	res := make([][]int, len(lines))
 	for i, ln := range lines {
 		res[i] = ParseDigits(ln)
